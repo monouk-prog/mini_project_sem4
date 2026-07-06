@@ -8,7 +8,7 @@ class MainMenu(QWidget):
         super().__init__()
 
         self.setWindowTitle("Tic Tac Toe - Menu")
-        self.resize(480, 520)
+        self.resize(480, 540)
 
         self.setStyleSheet("""
             QWidget {
@@ -93,64 +93,125 @@ class MainMenu(QWidget):
         self.layout.addWidget(QLabel("Select Match Type"))
         self.mode_layout = QHBoxLayout()
         self.mode_group = QButtonGroup(self)
-        
+
         self.btn_pvp = QPushButton("Local PvP")
         self.btn_pva = QPushButton("Vs Computer")
-        
+
         for btn in (self.btn_pvp, self.btn_pva):
             btn.setCheckable(True)
             self.mode_group.addButton(btn)
             self.mode_layout.addWidget(btn)
-            
+
         self.btn_pvp.setChecked(True) 
+        self.btn_pvp.toggled.connect(self.toggle_human_options)
         self.btn_pva.toggled.connect(self.toggle_ai_options)
         self.layout.addLayout(self.mode_layout)
-
-        # AI Difficulty Block
+    #
+        # AI difficulty Block
         self.ai_label = QLabel("Computer Subroutine")
         self.layout.addWidget(self.ai_label)
-        
-        self.diff_layout = QHBoxLayout()
-        self.diff_group = QButtonGroup(self)
-        
+
+        self.ai_layout = QHBoxLayout()
+        self.ai_group = QButtonGroup(self)
+
         self.btn_easy = QPushButton("Easy")
         self.btn_med = QPushButton("Medium")
         self.btn_hard = QPushButton("Hard")
-        
+
         for btn in (self.btn_easy, self.btn_med, self.btn_hard):
             btn.setCheckable(True)
-            self.diff_group.addButton(btn)
-            self.diff_layout.addWidget(btn)
-            
+            self.ai_group.addButton(btn)
+            self.ai_layout.addWidget(btn)
+
         self.btn_easy.setChecked(True)
-        self.layout.addLayout(self.diff_layout)
+        self.layout.addLayout(self.ai_layout)
+
+        # PVP Selection
+        self.human_label = QLabel("Role Selection")
+        self.layout.addWidget(self.human_label)
+        self.human_layout = QHBoxLayout()
+        self.human_group = QButtonGroup(self)
+
+        self.btn_x = QPushButton("X")
+        self.btn_o = QPushButton("O")
+
+        for btn in (self.btn_x,self.btn_o):
+            btn.setCheckable(True)
+            self.human_group.addButton(btn)
+            self.human_layout.addWidget(btn)
+
+        self.btn_x.setChecked(True)
+        self.layout.addLayout(self.human_layout)
+
+        # 3d Selection
+        self.ThreeD_label = QLabel("Toggle 3D Mode")
+        self.ThreeD_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.ThreeD_label)
+
+        self.ThreeD_layout = QHBoxLayout()
+        # self.ThreeD_group = QButtonGroup(self)
+
+        self.btn_3d = QPushButton("3D Mode")
+
+        self.btn_3d.setCheckable(True)
+        # self.ThreeD_group.addButton(self.btn_3d)
+        # when it has a group it will be exclusive and force one button to be checked
+        self.ThreeD_layout.addWidget(self.btn_3d)
         
-        # Hide AI options initially
-        self.ai_label.hide()
-        for i in range(self.diff_layout.count()):
-            self.diff_layout.itemAt(i).widget().hide()
+        self.btn_3d.setChecked(False)
+        self.layout.addLayout(self.ThreeD_layout)
+
+        self.btn_3d.toggled.connect(self.toggle_3d_options)
+        # Hide AI and Human options initially
+        self.hideai()
 
         self.layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
         # Launch Button
-        self.start_btn = QPushButton("ENGAGE SYSTEM")
+        self.start_btn = QPushButton("Start Game")
         self.start_btn.setObjectName("PlayButton")
         self.start_btn.clicked.connect(self.launch_game)
         self.layout.addWidget(self.start_btn)
 
         self.active_game = None
 
+    # Hide AI options
+    def hideai(self):
+        self.ai_label.hide()
+        for i in range(self.ai_layout.count()):
+            self.ai_layout.itemAt(i).widget().hide()
+
+    # Hide Human option
+    def hidehuman(self):
+        self.human_label.hide()
+        for i in range(self.human_layout.count()):
+            self.human_layout.itemAt(i).widget().hide()
+
+    def toggle_3d_options(self,is_checked):
+        if is_checked:
+            print("on")
+        else: 
+            print("off")
+
     def toggle_ai_options(self, is_ai_mode):
+        self.hidehuman()
         self.ai_label.setVisible(is_ai_mode)
-        for i in range(self.diff_layout.count()):
-            self.diff_layout.itemAt(i).widget().setVisible(is_ai_mode)
+        for i in range(self.ai_layout.count()):
+            self.ai_layout.itemAt(i).widget().setVisible(is_ai_mode)
+
+    def toggle_human_options(self, is_human_mode):
+        self.hideai()
+        self.human_label.setVisible(is_human_mode)
+        for i in range(self.human_layout.count()):
+            self.human_layout.itemAt(i).widget().setVisible(is_human_mode)
 
     def launch_game(self):
         selected_mode = "Player vs AI" if self.btn_pva.isChecked() else "Player vs Player"
         difficulty = "easy"
         if self.btn_med.isChecked(): difficulty = "medium"
         elif self.btn_hard.isChecked(): difficulty = "hard"
-
+        # elif self.btn_x.isChecked(): 
+        # elif self.btn_o.isChecked():
         game_settings = {
             "size": 3,
             "mode": selected_mode,
