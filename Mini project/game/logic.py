@@ -1,6 +1,9 @@
 class GameLogic:
     def __init__(self, size=3):
-        self.size = 3
+        self.size = size
+        self.reset()
+        
+    def reset(self):
         self.board = [[" " for _ in range(self.size)] for _ in range(self.size)]
         self.current_player = "X"
         self.game_over = False
@@ -32,8 +35,11 @@ class GameLogic:
         if self.winner:
             self.game_over = True
         else:
-            self.current_player = "O" if self.current_player == "X" else "X"
+            self.switch_player()
         return True
+
+    def switch_player(self):
+        self.current_player = "O" if self.current_player == "X" else "X"
 
     def get_fading_piece(self):
         """Returns the coordinates of the piece that will disappear on the player's NEXT turn."""
