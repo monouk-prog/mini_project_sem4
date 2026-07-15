@@ -1,14 +1,3 @@
-#!/usr/bin/env python3
-"""
-=============================================================================
-                   3D TIC TAC TOE - GAME REWRITE
-=============================================================================
-This module handles all rendering and interaction for the 3D Tic Tac Toe game.
-All objects are defined in 3D space and projected to 2D using perspective
-projection, ensuring proper rotation with the board.
-=============================================================================
-"""
-
 import pygame
 import sys
 import math

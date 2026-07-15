@@ -10,7 +10,7 @@ It initializes and runs the game.
 
 import sys
 import pygame
-from game.game3d import TicTacToe3D
+from ui.game3d import TicTacToe3D
 
 
 def main():

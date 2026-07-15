@@ -124,7 +124,7 @@ class GameWindow(QWidget):
         self.rematch_btn.clicked.connect(self.rematch_game)
         self.action_layout.addWidget(self.rematch_btn)
 
-        self.return_btn = QPushButton("TERMINATE TO MENU")
+        self.return_btn = QPushButton("EXIT TO MENU")
         self.return_btn.setFixedSize(180, 52)
         self.return_btn.setFocusPolicy(Qt.NoFocus)
         self.return_btn.setStyleSheet("""
