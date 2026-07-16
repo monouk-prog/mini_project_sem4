@@ -2,10 +2,10 @@ from PySide6.QtWidgets import QWidget, QGridLayout, QPushButton, QVBoxLayout, QH
 from PySide6.QtCore import Qt, QObject, Signal
 import threading
 
-from game.logic import GameLogic
-import ai.easy
-import ai.medium
-import ai.hard
+from mini_project.game.logic import GameLogic
+import mini_project.ai.easy as aieasy
+import mini_project.ai.medium as aimedium
+import mini_project.ai.hard as aihard
 
 # ROS2 imports — optional, gracefully skip if not available
 try:
@@ -15,6 +15,7 @@ try:
     ROS_AVAILABLE = True
 except ImportError:
     ROS_AVAILABLE = False
+    print("ROS not available")
 
 # Bridge between ROS2 thread and Qt main thread
 class RosBridge(QObject):
@@ -176,11 +177,11 @@ class GameWindow(QWidget):
 
     def trigger_ai_move(self):
         if self.difficulty == "easy":
-            ai_move = ai.easy.get_move(self.logic.board, ai_marker="O", human_marker="X")
+            ai_move = aieasy.get_move(self.logic.board, ai_marker="O", human_marker="X")
         elif self.difficulty == "medium":
-            ai_move = ai.medium.get_move(self.logic.board, ai_marker="O", human_marker="X")
+            ai_move = aimedium.get_move(self.logic.board, ai_marker="O", human_marker="X")
         else:
-            ai_move = ai.hard.get_move(self.logic.board, ai_marker="O", human_marker="X")
+            ai_move = aihard.get_move(self.logic.board, ai_marker="O", human_marker="X")
 
         if ai_move:
             ai_r, ai_c = ai_move
@@ -258,7 +259,7 @@ class GameWindow(QWidget):
             if reply == QMessageBox.No: return
 
         self.is_returning_to_menu = True
-        from ui.menu import MainMenu 
+        from mini_project.ui.menu import MainMenu 
         self.menu_window = MainMenu()
         self.menu_window.show()
         self.close()

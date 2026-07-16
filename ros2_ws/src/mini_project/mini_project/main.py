@@ -1,9 +1,12 @@
 from PySide6.QtWidgets import QApplication
-from ui.menu import MainMenu
+from mini_project.ui.menu import MainMenu
 import sys
-
-if __name__ == "__main__":
+def main(args=None):
     app = QApplication(sys.argv)
     window = MainMenu()
     window.show()
     sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()

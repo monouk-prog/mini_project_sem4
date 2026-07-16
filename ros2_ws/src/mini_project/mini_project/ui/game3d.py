@@ -2,7 +2,11 @@ import pygame
 import sys
 import math
 import random
-from game.logic import GameLogic
+from mini_project.game.logic import GameLogic
+import mini_project.ai.easy as aieasy
+import mini_project.ai.medium as aimedium
+import mini_project.ai.hard as aihard
+
 
 
 class TicTacToe3D:
@@ -11,7 +15,7 @@ class TicTacToe3D:
     All game objects exist in 3D space and are projected to screen coordinates.
     """
 
-    def __init__(self):
+    def __init__(self,settings):
         """Initialize Pygame, display, and game state."""
         pygame.init()
 
@@ -29,6 +33,9 @@ class TicTacToe3D:
         pygame.display.set_caption("3D Tic Tac Toe")
 
         # Game settings
+        self.settings = settings
+        self.mode = settings["mode"]
+        self.difficulty = settings.get("difficulty","easy")
         self.size = 3
         
         # Scaling and sizing
@@ -727,6 +734,8 @@ class TicTacToe3D:
                             self.cursor_r, self.cursor_c = r, c
                             if self.logic.board[r][c] == " ":
                                 self.logic.make_move(r, c)
+                                if self.is_ai_turn() and not self.logic.game_over:
+                                    self.trigger_ai_move()
                                 self.fading_piece = self.logic.get_fading_piece()
 
                     # Start drag
@@ -794,6 +803,21 @@ class TicTacToe3D:
                         self.logic.make_move(r, c)
                         self.fading_piece = self.logic.get_fading_piece()
                         self.cursor_r, self.cursor_c = r, c
+
+    def trigger_ai_move(self):
+        if self.difficulty == "easy":
+            ai_move = aieasy.get_move(self.logic.board, ai_marker="O", human_marker="X")
+        elif self.difficulty == "medium":
+            ai_move = aimedium.get_move(self.logic.board, ai_marker="O", human_marker="X")
+        else:
+            ai_move = aihard.get_move(self.logic.board, ai_marker="O", human_marker="X")
+
+        if ai_move:
+            ai_r, ai_c = ai_move
+            self.logic.make_move(ai_r, ai_c)
+
+    def is_ai_turn(self):
+        return str(self.mode).lower() in ["single","player vs ai"] and self.logic.current_player == "O"
 
     # ========================================================================
     # MAIN LOOP

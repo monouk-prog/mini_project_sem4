@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
                                QPushButton, QSpacerItem, QSizePolicy, QButtonGroup)
 from PySide6.QtCore import Qt
-from ui.game_window import GameWindow 
+from mini_project.ui.game_window import GameWindow 
+from mini_project.ui.game3d import TicTacToe3D
 
 class MainMenu(QWidget):
     def __init__(self):
@@ -218,6 +219,10 @@ class MainMenu(QWidget):
             "difficulty": difficulty if selected_mode == "Player vs AI" else None
         }
 
-        self.active_game = GameWindow(settings=game_settings)
-        self.active_game.show()
+        if self.btn_3d.isChecked():
+            self.active_game = TicTacToe3D(settings=game_settings)
+            self.active_game.run()
+        else:
+            self.active_game = GameWindow(settings=game_settings)
+            self.active_game.show()
         self.close()
